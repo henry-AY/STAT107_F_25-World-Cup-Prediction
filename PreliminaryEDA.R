@@ -1,16 +1,3 @@
-
-### Relationship between goals scored and points
-plot(jitter(df_group_standings_clean$goals_for),
-     jitter(df_group_standings_clean$points),
-     xlab = "Goals Scored",
-     ylab = "Points Earned",
-     main = "Relationship between goals scored and points",
-     pch = 1)
-
-model <- lm(points ~ goals_for, data = df_group_standings_clean)
-abline(model, col="blue")
-
-
 ### Histogram - Points Distribution: Advanced vs. Not Advanced 
 hist(df_group_standings_clean$points[df_group_standings_clean$advanced == 1], 
      col = rgb(0, 1, 0, 0.5), 
