@@ -1,3 +1,5 @@
+> Authors: Jigar Patel, Henry Yost, Davinia Muthalaly, Refugio Zepeda
+
 STAT107 World Cup Prediction Project
 
       source("00_libraries.R")
