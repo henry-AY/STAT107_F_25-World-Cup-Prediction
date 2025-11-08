@@ -23,6 +23,63 @@ df_group_standings <- clean_group_standings("group_standings.csv")
 head(df_group_standings, 200)
 ```
 
+
+
+```{r}
+
+
+# creating new column to store labels
+df_group_standings$is_winner <- 0
+
+years <- unique(df_group_standings$year) # finding all unique WC years
+
+# going through each year, finding team with highest points
+for (i in 1:length(years)) {
+  
+  data_year <- df_group_standings[df_group_standings$year == years[i], ]
+  
+  max_points <- max(data_year$points)
+  
+  same_points <- data_year[data_year$points == max_points, ]
+ 
+   # if tie, then use goal difference
+  if (nrow(same_points) > 1) {
+    max_gd <- max(same_points$goal_difference)
+    same_points <- same_points[same_points$goal_difference == max_gd, ]
+    
+  }
+ 
+   # labeling whichever team as winner for that year
+  df_group_standings$is_winner[df_group_standings$team_name == same_points$team_name & 
+                                 df_group_standings$year == years[i]] <- 1
+  
+}
+
+# frequency table with counts
+winner_table <- table(df_group_standings$is_winner)
+names(winner_table) <- c("Not Winner(0)", "Winner(1)")
+winner_table
+
+```
+
+```{r}
+
+# data frame showing which teams were winners each year
+winner_list <- df_group_standings[df_group_standings$is_winner == 1,
+                                  c("year", "team_name", "points", "goal_difference")]
+winner_list <- winner_list[order(winner_list$year), ]
+
+winner_list
+
+```
+
+
+```{r}
+
+head(df_group_standings)
+
+```
+
 ## Exploratory Data Analysis (visualizations)
 
 ### Relationship between goals scored and points
