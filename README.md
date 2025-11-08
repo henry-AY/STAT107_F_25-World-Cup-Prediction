@@ -1,5 +1,7 @@
 > Authors: Jigar Patel, Henry Yost, Davinia Muthalaly, Refugio Zepeda
 
+# Files
+
 STAT107 World Cup Prediction Project
 
       source("00_requirements.R")
@@ -22,7 +24,35 @@ This file has all of our source calls and plots visible in one place for a clean
 our different analyses, abstract, and description of what our code was showing and the things we wanted to explore further 
 that could help answer our main question. 
 
+# Installation & Usage
 
+### 1. Fork & Clone Repo
 
+If you haven’t already, start by forking this repository to your own GitHub account so you can make edits or run the code independently.
 
+Then clone your fork to your local machine:
+```bash
+git clone https://github.com/<your-username>/STAT107-WorldCup-Prediction-Project.git
+cd STAT107-WorldCup-Prediction-Project
+```
 
+### 2. Set Up Your R Environment
+Make sure you have R (≥ 4.0) and RStudio installed and launch RStudio.
+
+Then install the required packages by running the following in your R console:
+```bash
+# Install required libraries
+source("00_requirements.R")
+```
+
+### 3. Run Exploratory Data Analysis on `group_standings.csv`
+
+Run the `EDA_groupstandings.rmd` and `PreliminaryEDA.R` files, which will generate the necessary graphs.
+
+These scripts perform:
+* Exploratory Data Analysis (EDA)
+* Visualizations and relationships between variables
+
+### 5. Final Report
+Finally, to view the compiled progress report, open `FinalReport.Rmd` in RStudio and knit it to generate `FinalReport.pdf`.
+This report combines all results, figures, and interpretations into a single, clean document.
