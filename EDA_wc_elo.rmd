@@ -1,0 +1,33 @@
+---
+title: "New EDA"
+author: "Team 23"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+# Cleaning qualified_teams.csv and ranking_soccer_1901-2023.csv datasets
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+
+# Install req text
+source("00_requirements.R")
+
+# import cleaning function
+source("clean_elo_with_qualified_wc.R")
+```
+
+```{r}
+elo_wc <- add_wc_matches_to_elo( 
+  elo_filepath = "C:/Users/refug/OneDrive/Documents/STAT107_Team_23_World_Cup/ranking_soccer_1901-2023.csv", 
+  wc_perf_filepath = "C:/Users/refug/OneDrive/Documents/STAT107_Team_23_World_Cup/qualified_teams.csv"
+)
+
+head(elo_wc)
+```
+```{r}
+write_csv(elo_wc, "data/elo_with_wc_data.csv")
+```
+
+
