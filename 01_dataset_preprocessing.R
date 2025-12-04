@@ -31,10 +31,12 @@ clean_wc_performance <- function(filepath) {
 }
 
 
+library(readr)
 
 # This functions primary goal is to clean the .csv data from: https://github.com/JGravier/soccer-elo/blob/main/csv/ranking_soccer_1901-2023.csv
 # This dataset is mostly numeric, therefore, we do not need any regex to filter specific values.
 # Instead, we're able to grab the necessary variables for both direct and indirect use (i.e. calculating a new variable)
+# Additionally, this function uses the readr library to properly parse any weird negatives.
 
 clean_elo_ratings <- function(filepath) {
   df_elo <- readr::read_csv(filepath, show_col_types = FALSE)
@@ -43,13 +45,17 @@ clean_elo_ratings <- function(filepath) {
   # Data Cleaning & Processing 
   df_elo_clean <- df_elo[, c(
     "year", "team", "rating", "rank", "one_year_change_rating", "matches_total", "matches_wins", "goals_for")]
-
   
-  df_elo_clean <- dplyr::mutate(
-    df_elo_clean,
-    dplyr::across(where(is.character), trimws),
-    dplyr::across(c(year, rating, rank, one_year_change_rating), as.numeric)
-  )
+  df_elo_clean <- df_elo_clean %>%
+    dplyr::mutate(
+      # 1. Standardize all minus-like characters to the ASCII hyphen
+      one_year_change_rating = gsub("[−–—]", "-", one_year_change_rating),
+      
+      # 2. Use parse_number to intelligently extract the numeric value
+      #    It will handle leading spaces, trailing text, and the decimal point correctly.
+      one_year_change_rating = readr::parse_number(one_year_change_rating)
+    )
+  
   
   df_elo_clean <- dplyr::rename(
     df_elo_clean,
@@ -90,13 +96,11 @@ add_wc_matches_to_elo <- function(elo_filepath, wc_perf_filepath) {
   # keep all ELO rows, add count_matches where team & WC match
   # Also, in this block we only select the final variables we need form the dataset.
   df_elo_with_matches <- df_elo %>%
-    dplyr::left_join(
+    dplyr::inner_join(
       df_wc,
       by = c("world_cup_year", "team_name")
     )  %>%
     dplyr::mutate(
-      elo_1yr_change_rating = ifelse(is.na(elo_1yr_change_rating), 0, elo_1yr_change_rating), 
-      count_matches = ifelse(is.na(count_matches), 0, count_matches),
       win_ratio = ifelse(matches_total > 0, matches_wins / matches_total, 0),
       goals_ratio = ifelse(matches_total > 0, goals_for / matches_total, 0)
     ) %>%

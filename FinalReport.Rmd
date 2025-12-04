@@ -1,5 +1,5 @@
 ---
-title: "STAT 107 World Cup Prediction"
+title: "How many matches will teams play in the next  26' World Cup?"
 author: 
     - Team 23 - Jigar Patel, Henry Yost, Davinia Muthalaly, Refugio Zepeda
 output:
@@ -14,15 +14,33 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Abstract
+
+
 For our project, the main question we are trying to answer is, using previous years data set, are we able to pull accurate, predictable factors/variables which can guide us in being able to predict a future World Cup winner. What we are more specifically trying to look for, is next year's World Cup winner by building a model around the data we have. From our preliminary work, we have found some strong variables, that lead to which teams advance to the next round and which don't. We have also looked into some distributions for advancing teams and non-advancing teams to see different relationships in the data set for multiple previous World Cups. 
 
 ## Introduction 
-Our purpose for this analysis is to make an efficient model that can get close to, if not, precisely predict the World Cup winner. We want to be able to achieve this goal by using only previous years data sets and the information that comes with it. This analysis can benefit many who are interested in the world of soccer and have a passion for the game. We will try to build a model in which we train it to take in the variables from our data set we want to use, and be able to use the information to make an informed hypothesis of the next World Cup winner. 
+The purpose of this analysis is to examine the key factors that influence how many matches a national team plays in the World Cup. The primary question we seek to answer is: How many matches does a team play in the 26' World Cup. We conduct statistical analysis using linear modeling as a baseline, to determine the impact of variables such as the rating/ELO, team rank, average # of goals scored in the season, etc... 
+The analysis is valuable to sports betters and large sports-oriented industries aiming to understand the current status of teams, and how well they will perform in the upcoming world cup.
+We approached this project, by first selecting two datasets that include information all the way from the early 20th century. However, because soccer has changed so much in recent years, we decided it would be best to only use the last 10 world cups as data (1982 - present). First, we trained a regression model on our cleaned data to determine the variables that are most significant for predicting how many matches a team plays in the WC. Additionally, this was used as a baseline model and a sanity check to verify our data is accurate to what we would expect. The results will give us a clearer picture of understanding how teams perform in the WC, based on the variables in the datasets, helping stakeholders to make more informed decisions in world cup games.
 
 ## Data
-Note: We currently have an additional dataset (Sofascore) that contains more data about individual games and team ELO. However, this dataset was originally structured for use in Python, and requires us to move it into R.
+The data used for this analysis was sourced both from open-source GitHub repositories, a popular platform for sharing data and code projects, that provides publicly available data. The first dataset is from [JGavier](https://github.com/JGravier/soccer-elo/blob/main/csv/ranking_soccer_1901-2023.csv), which includes data from 1901 to present day, with variables: rank, rating, rating/rank changes, and total yearly match data. The second dataset we used was sources from [Jfjelstul](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv), a Ph.D developer interested in World Cup data. This dataset includes data all the way from 1930 - present, including variables: number of matches played for that team in the WC of that year, and their performance (categorical: `group stage`, `first round`, `semi-finals`, etc...)
+During the process of joining both datasets, we also calculated additional values we thought would have a significant impact in a teams performance in the world-cup:
+* `
 
-Our data set was created by Ph.D developer who was interested in the World Cup. This was all accessible through a github repository that we found in our search for reliable data. We have many different variables for this dataset from team ID's to wins/losses/draws, as well as goals_for, goals_against, games played, and a couple more informative and performance based variables. 
+## Data Cleaning
+The data cleaning process involved several steps to ensure the final datasets quality and consistency. Originally, the dataset from [JGavier](https://github.com/JGravier/soccer-elo/blob/main/csv/ranking_soccer_1901-2023.csv) had 17,201 observations, however, after filtering from 1981 - present (and only every 4 years), and updating missing entries to 0, we had a much cleaner and more accurate dataset for our question. The reason we extracted the data from 1981 (world-cup year) - present, every 4 years, is because the data was collected on Dec. 31st. Had we collected on the same year as the World Cup, then the data would've been after the World Cup. We extract the match information from the second dataset from [Jfjelstul](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv), and similarly, extract from 1982 - present. After extracting all the necessary variables, to start the data cleaning process, we first converted all the variables to numeric to ensure consistency, and also calculating  
+
+he data cleaning process involved several steps to ensure the data set’s quality and consistency. Origi-
+nally, the data set had 2,226,382 observations, however, after filtering for California and removing missing
+entries, w retained a much more manageable subset of 170,956 observations. In order to clean the data,
+we start with removing all of the rows with missing values for key variables like price, house size, acre lot,
+bed, bath. Properties with non-positive prices (Price￿0) or extreme outline prices were also filtered out to
+maintain valid and reasonable price ranges. The data types were then converted to ensure compatibility:
+bed, bath, house_size, and acre_lot were transformed into numeric variables, while city was treated as a
+categorical variable.Finally, log transformations were applied to normalize skewed data distributions, specif-
+ically log(price), log(house_size), and log(acre_lot + 1), which helped enhance the data set’s suitability for
+analysis
 
 ### - Necessary Libraries
 ```{r, echo=FALSE}
