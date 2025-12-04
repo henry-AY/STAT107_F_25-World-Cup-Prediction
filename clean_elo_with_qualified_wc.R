@@ -39,11 +39,9 @@ clean_elo_ratings <- function(filepath) {
   head(df_elo, 200)
   
   ## Data Cleaning / Processing 
-  df_elo_clean <- df_elo[, c("year", 
-                             "team", 
-                             "rating", 
-                             "rank", 
-                             "one_year_change_rating")]
+  df_elo_clean <- df_elo[, c(
+    "year", "team", "rating", "rank", "one_year_change_rating", "matches_total", "matches_wins", "goals_for")]
+
   
   df_elo_clean <- dplyr::mutate(
     df_elo_clean,
@@ -91,9 +89,15 @@ add_wc_matches_to_elo <- function(elo_filepath, wc_perf_filepath) {
     )  %>%
     dplyr::mutate(
       elo_1yr_change_rating = ifelse(is.na(elo_1yr_change_rating), 0, elo_1yr_change_rating), 
-      count_matches = ifelse(is.na(count_matches), 0, count_matches)
+      count_matches = ifelse(is.na(count_matches), 0, count_matches),
+      win_ratio = ifelse(matches_total > 0, matches_wins / matches_total, 0),
+      goal_ratio = ifelese(matches_total > 0, goals_for / matches_total, 0)
+    ) %>%
+    dplyr::select(
+       world_cup_year, team_name, elo_rating, elo_rank, elo_1yr_change_rating, win_ratio, 
+       goals_ratio, count_matches
     )
-  
+
   return(df_elo_with_matches)
 }
 
