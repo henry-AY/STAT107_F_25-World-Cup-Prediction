@@ -3,7 +3,8 @@ title: "How many matches will teams play in the next  26' World Cup?"
 author: 
     - Team 23 - Jigar Patel, Henry Yost, Davinia Muthalaly, Refugio Zepeda
 output:
-  pdf_document: default
+  pdf_document:
+    latex_engine: xelatex
   html_document:
     df_print: paged
 date: "2025-11-07"
@@ -15,8 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Abstract
 
-
-For our project, the main question we are trying to answer is, using previous years data set, are we able to pull accurate, predictable factors/variables which can guide us in being able to predict a future World Cup winner. What we are more specifically trying to look for, is next year's World Cup winner by building a model around the data we have. From our preliminary work, we have found some strong variables, that lead to which teams advance to the next round and which don't. We have also looked into some distributions for advancing teams and non-advancing teams to see different relationships in the data set for multiple previous World Cups. 
+> Write Abstract Here
 
 ## Introduction 
 The purpose of this analysis is to examine the key factors that influence how many matches a national team plays in the World Cup. The primary question we seek to answer is: How many matches does a team play in the 26' World Cup. We conduct statistical analysis using linear modeling as a baseline, to determine the impact of variables such as the rating/ELO, team rank, average # of goals scored in the season, etc... 
@@ -24,95 +24,56 @@ The analysis is valuable to sports betters and large sports-oriented industries 
 We approached this project, by first selecting two datasets that include information all the way from the early 20th century. However, because soccer has changed so much in recent years, we decided it would be best to only use the last 10 world cups as data (1982 - present). First, we trained a regression model on our cleaned data to determine the variables that are most significant for predicting how many matches a team plays in the WC. Additionally, this was used as a baseline model and a sanity check to verify our data is accurate to what we would expect. The results will give us a clearer picture of understanding how teams perform in the WC, based on the variables in the datasets, helping stakeholders to make more informed decisions in world cup games.
 
 ## Data
-The data used for this analysis was sourced both from open-source GitHub repositories, a popular platform for sharing data and code projects, that provides publicly available data. The first dataset is from [JGavier](https://github.com/JGravier/soccer-elo/blob/main/csv/ranking_soccer_1901-2023.csv), which includes data from 1901 to present day, with variables: rank, rating, rating/rank changes, and total yearly match data. The second dataset we used was sources from [Jfjelstul](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv), a Ph.D developer interested in World Cup data. This dataset includes data all the way from 1930 - present, including variables: number of matches played for that team in the WC of that year, and their performance (categorical: `group stage`, `first round`, `semi-finals`, etc...)
+The data used for this analysis was sourced both from open-source GitHub repositories, a popular platform for sharing data and code projects, that provides publicly available data. The first dataset is from [JGavier](https://github.com/JGravier/soccer-ELO/blob/main/csv/ranking_soccer_1901-2023.csv), which includes data from 1901 to present day, with variables: rank, ELO, rating/rank changes, and total yearly match data. 
+
+ELO is a formulaic way to represent team strength ratings in a weighted manner for any tournament-based event. The formula used to calculate the ELO values comes from [eloratings.net](https://www.eloratings.net/about).
+
+$$R_n = R_o + K \times (W - W_e)$$
+Where, $R_n$ is the new rating, $R_o$ is the pre-match rating, $K$ is a constant weight for the tournaments played. $W$ is the result of the game (1 for win, 0.5 for draw, 0 for loss) and $W_e$ is the win expectancy from previous data and team strength.
+
+The second dataset we used was sources from [Jfjelstul](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv), a Ph.D devELOper interested in World Cup data. This dataset includes data all the way from 1930 - present, including variables: number of matches played for that team in the WC of that year, and their performance (categorical: `group stage`, `first round`, `semi-finals`, etc...)
 During the process of joining both datasets, we also calculated additional values we thought would have a significant impact in a teams performance in the world-cup:
-* `
+* `win_ratio`: the number of wins divided by the number of total games; this variable gives us an idea of their W/L ratio, which can be valuable in determining how far a team will get in the WC.
+* `goals_ratio`: the number of goals divided by the total number of games; this variable gives us an idea of the average number of goals per game.
 
 ## Data Cleaning
-The data cleaning process involved several steps to ensure the final datasets quality and consistency. Originally, the dataset from [JGavier](https://github.com/JGravier/soccer-elo/blob/main/csv/ranking_soccer_1901-2023.csv) had 17,201 observations, however, after filtering from 1981 - present (and only every 4 years), and updating missing entries to 0, we had a much cleaner and more accurate dataset for our question. The reason we extracted the data from 1981 (world-cup year) - present, every 4 years, is because the data was collected on Dec. 31st. Had we collected on the same year as the World Cup, then the data would've been after the World Cup. We extract the match information from the second dataset from [Jfjelstul](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv), and similarly, extract from 1982 - present. After extracting all the necessary variables, to start the data cleaning process, we first converted all the variables to numeric to ensure consistency, and also calculating  
+The data cleaning process involved several steps to ensure the final datasets quality and consistency. Originally, the dataset from [JGavier](https://github.com/JGravier/soccer-ELO/blob/main/csv/ranking_soccer_1901-2023.csv) had 17,201 observations, however, after filtering from 1981 - present (and only every 4 years), and updating missing entries to 0, we had a much cleaner and more accurate dataset for our question. The reason we extracted the data from 1981 (world-cup year) - present, every 4 years, is because the data was collected on Dec. 31st. Had we collected on the same year as the World Cup, then the data would've been after the World Cup. We extract the match information from the second dataset from [Jfjelstul](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv), and similarly, extract from 1982 - present. After extracting all the necessary variables, to start the data cleaning process, we first converted all the variables to numeric to ensure consistency, and also calculating the `win_ratio` and `goals_ratio` explored in the Data section above. During the data cleaning process, we made sure to capture the negative values by converting the sign to an ASCII negative sign. This data is extremely important, because it shows patters of the teams that went down in ELO. Additionally, we converted all of the values (except for team name) to numeric, to make it viable when working with our models.
 
-he data cleaning process involved several steps to ensure the data set’s quality and consistency. Origi-
-nally, the data set had 2,226,382 observations, however, after filtering for California and removing missing
-entries, w retained a much more manageable subset of 170,956 observations. In order to clean the data,
-we start with removing all of the rows with missing values for key variables like price, house size, acre lot,
-bed, bath. Properties with non-positive prices (Price￿0) or extreme outline prices were also filtered out to
-maintain valid and reasonable price ranges. The data types were then converted to ensure compatibility:
-bed, bath, house_size, and acre_lot were transformed into numeric variables, while city was treated as a
-categorical variable.Finally, log transformations were applied to normalize skewed data distributions, specif-
-ically log(price), log(house_size), and log(acre_lot + 1), which helped enhance the data set’s suitability for
-analysis
 
-### - Necessary Libraries
+### Primary Cleaned Dataset
+
 ```{r, echo=FALSE}
-source("00_requirements.R")
+# Brief overview of the cleaned dataset.
+df_clean = read.csv("data/primary_dataset_wc_ELO.csv")
 
-# Loading R functions used for report
-source("PreliminaryEDA.R")
-source("clean_group_standings.R")
-```
-
-### - Reading in Dataset + Preprocessing (Data Cleaning/Processing)
-
-```{r}
-# function called that cleans group_standings.csv by stripping non-numeric,
-# and uses RegEx to convert to numeric (if applicable)
-df_clean = clean_group_standings("data/group_standings.csv")
 cat("Dataset size: ", nrow(df_clean), "rows and", ncol(df_clean), "columns\n")
 
 head(df_clean, 10)
 ```
 
-This chunk is to show the Dataset size (626 x 13) and also give a sneak-peek into the dataset, so that its easier to understand what sort of data is being used in the document.
+This chunk is to show the cleaned Dataset size (316 x 8) and also give a peek into the dataset, so that its easier to understand what sort of data is being used in this project.
 
 
 ## Visualization
-### Preliminary Exploratory Data Analysis (EDA)
 
-```{r, echo=FALSE}
-plot_goals_vs_points(df_clean)
-```
+We used several visualization techniques in order to asses the correlation and nature of our variables and data to determine optimal tests and models to use for our project. These first set of graphs include visualizations, to explore the dataset, which will be further explored bELOw:
 
-#### Scatter Plot Analysis - Relationship between Goals Scored and Points Earned:
+#### Goals vs. ELO Ratings
 
-This graph plots the relationship between goals scored and points throughout the tournament(s), and there exists an expectation; teams that score more goals will tend to earn more points. Thus, given this plot gives a positive linear relationship the plot behaves as an initial sanity check of the dataset. Looking into the graph, we can see that most teams score less than 10 goals scored throughout the tournament, suggesting the majority of the teams have a strong defense or the games are low-scoring (a hypothesis worth exploring further). Additionally, a large cluster of teams is around the 4 points and less than 5 goals scored, this shows us that majority of teams do not advance far into the tournament. Conversely, teams outside these ranges like correspond to teams progressing to the later stages of the tournament, which can be an invaluable trend that can help towards predicting future games.
+> Insert image of graph here
 
-```{r, echo=FALSE}
-plot_advanced_vs_notadvanced(df_clean)
-```
+This scatterplot plots the Goals scored for per match in the World Cup versus the teams ELO ratings. It shows a clear, positive linear relationship between the two variables. While there is some noticeable variability, teams with higher ELO ratings generally tend to score more goals per match, as seen by the upward-sloping regression line. ELO summarizes long-term team performance and competitive strength before the tournament, and we can see that this rating is a relevant predictor for a teams offensive capabilities. Additionally, this scatterplot behaves as a 'sanity' check for our data, to verify that the expected relationship exists (linear and positive).
 
-#### Histogram Analysis - Points Distribution: Advanced vs. Not Advanced:
+#### Goals Per Match over years for Top−Scoring Teams
 
-This histogram shows us the point distribution for all the teams in the World Cup. The red and green differentiate teams that advanced to the next round, which is green, and the teams that did not advance to the next round, which is in red. As we can see from the histogram, the max points a team that didn't advance was 4 and the minimum a team got that did advance was about. Logically this would make sense, as better teams would show a stronger defense in matches, therefore the teams that didn't advance would produce lower points in those matches. And vice versa for points scored. A better team would also have a stronger offense, therefore their points in the histogram would show as much higher than the teams that didn't advance. This is a good insight to look at because we can base our future prediction off of higher scoring teams, as it shows some relation to advancing teams. 
+> Insert image of graph here
 
-```{r, echo=FALSE}
-plot_goals_for_against(df_clean)
-```
+This line graph tracks how the highest-scoring teams in our dataset from various World cup years from 1982 - present (hence the West Germany). While the specific levels vary team by team, the majority of the teams show a gradual decline and/or stabilization in goals per match over time. Ultimately, this reflects more broad trends in global soccer, including more balanced tournament competition amongs the teams and potentially more emphasis on defensive plays. We can also see that historically strong teams, such as Brazil and Germany maintain a relatively consistent scores. These patterns suggest that past scoring behavior can be useful for predicting future scoring, which is parallel to our main question.
 
-#### Scatterplot Analysis - Goals For vs. Goals Against:
+#### Correlation Heatmap
 
-In this scatter plot, the bottom-left represents low-scoring games (defensive teams). The top-left shows a high scoring game. The bottom right corner shows a strong defensive and offensive game which is the ideal game for advancing teams. And the top right corner would represent the opposite, a weak game, both defensively and offensively. From the scatter plot we see the green, or advancing teams, are congregating in the bottom right corner of the plot while the red, or not advancing teams, are more clustered from very bottom left to top right corner. This is another good insight to note for advancing teams will normally have higher goals_for and lower goals_against for them to advance. The goals against is something we can also look at for future predictions we want to make about the world cup. 
+Here, we can visualize and assess how the key numeric variables in our dataset (ELO rating, recent performance, match count, and goal scoring) all relate with one another.
 
-```{r, results='hide', message=FALSE, warning=FALSE}
+> Insert image of heatmap here
 
-# Some factor levels produced warnings due to perfect separation.
-# results still indicate the main predictive variables.
-
-models <- run_logistic_regression(df_clean)
-summary(models$reduced_model1)
-summary(models$reduced_model2)
-```
-#### Logistic Regression
-
-Using logistic regression on the group standings performance variables, we found three variables to be best predictors out of all of the variables. Played games, draws, and wins were the three variables that created the lowest model AIC from all the variables. Using backwards step wise selection, we take out any variables that has a higher AIC than the model AIC because once removed, the model AIC goes lower. And from that we reached a model with the three variables mentioned earlier as great predictors for whether a team advances or not. 
-
-
-We made another model, however only using 4 of the variables to look a more performance based model. From this we see that the second model shows the variables goal_difference and points. These two variables made for the lowest AIC score and the best predictors out of the 4 variables used in the second model. We see that the second models AIC score (366.50) is higher than the first models AIC score (285.06), however they capture different results. The first model provides variables that show direct outcomes of a game like wins and draws. The second model provides variables that use the performance of the team in a game, such as points scored and the goal_difference between the teams for that game. 
-
-
-## Analysis 
-
-For the goal of predicting the next World Cup winner, we plan to implement a more sophisticated model that is able to capture and take advantage of the non-linear relationships in the dataset between multiple variables. Right now, we are leaning towards an XGBoost (Extreme Gradient Boosting) model, because they are effective for tabular data where variables interact in complex ways (such as the soccer dataset). It is also known for being highly predictive and flexible with proper tuning, which hopefully will help us get a more accurate and consistent result.
-
-Additionally, we may explore feature engineering, such as calculating team specific variables (momentum, win ratios, etc...) which could provide extra valuable predictive power. Additionally, Cross validation and proper evaluation metrics will be used to validate and confirm the accuracy of our model performance.
-
-Currently, our next steps are to get the data from Sofascore integrated into R, and that will give us significantly more information to work with. Additionally, we want to create binary labels for each tournament winner for training.
+As seen in the heatmap, goals per match shows strong positive correlation with win ratio, and moderate positive correlation with ELO rating. This indicates that the teams who win more and have higher pre-tournament strength tend to score more goals. Match count is also positively correlated to goals and ELO, showing that stronger teams have the ability to not only advance further, but also have a stronger offensive. This is an interesting discovery, and something we can further explore with a linear model to determine which variables are most significant with match count beyond a correlation value. Additionally, ELO rank is strongly negatively correlated with ELO rating (i.e. 1989, 1244...) as higher ranks (i.e. Rank 1, 2, 3...) indicate stronger teams. Overall, these relationships should provide strong support for ELO-based and performance-based variables in our predictive models in answering our main question. 

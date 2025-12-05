@@ -48,11 +48,10 @@ clean_elo_ratings <- function(filepath) {
   
   df_elo_clean <- df_elo_clean %>%
     dplyr::mutate(
-      # 1. Standardize all minus-like characters to the ASCII hyphen
+      # Standardize minus sign characters to the ASCII hyphen (did this because of issues extracting the dataset)
       one_year_change_rating = gsub("[−–—]", "-", one_year_change_rating),
       
-      # 2. Use parse_number to intelligently extract the numeric value
-      #    It will handle leading spaces, trailing text, and the decimal point correctly.
+      # parse_number to extract numeric values so we do not have NA's
       one_year_change_rating = readr::parse_number(one_year_change_rating)
     )
   
