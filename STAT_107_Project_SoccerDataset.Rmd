@@ -42,8 +42,7 @@ Predicting elo_ratings using performance based variables
 performance_based_elo_model <- lm(elo_rating ~ win_ratio + goals_ratio, data = wc_elo)
 summary(performance_based_elo_model)
 ```
-This shows us that 89.5% (R-squared value) of the predictor variables
-show the difference in elo_ratings. Using Poland's 1982 world cup pre-season stats, we can see if the model
+Using Poland's 1982 world cup pre-season stats, we can see if the model
 we made was accurate and how precise the model was by using the
 variables used in the model, with Poland stats for that year.
 
