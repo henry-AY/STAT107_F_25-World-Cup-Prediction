@@ -1,4 +1,6 @@
 
+source("00_requirements.R")
+
 count_match_prediction <- function(year) {
   library(randomForest)
   
@@ -29,14 +31,12 @@ count_match_prediction <- function(year) {
   
   wc_year_prediction$error <- wc_year_prediction$predicted_count_matches - wc_year_prediction$count_matches
   
-  ## calculate the model accuracy in a data frame
+  # calculate the model accuracy in a data frame
   actual <- wc_year_prediction$count_matches
   pred <- wc_year_prediction$predicted_count_matches
   
   RMSE <- sqrt(mean((pred - actual)^2))
-  
   MAE <- mean(abs(pred - actual))
-  
   MAPE <- mean(abs((pred - actual) / actual)) * 100
   
   accuracy_df <- data.frame(
@@ -45,9 +45,9 @@ count_match_prediction <- function(year) {
     MAPE = MAPE
   )
   print(accuracy_df)
-  ## end of accuracy calculations 
+  # end of accuracy calculations 
   
-  ## graph the model for better visualization 
+  # graph the model for better visualization 
   barplot(
     wc_year_prediction$error,
     names.arg = wc_year_prediction$team_name,

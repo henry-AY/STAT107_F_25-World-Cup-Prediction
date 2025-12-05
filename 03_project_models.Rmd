@@ -12,6 +12,11 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, include=FALSE, warning=FALSE, echo=FALSE}
+# Load all necessary files
+source("00_requirements.R")
+```
+
 ```{r, warning=FALSE}
 national_ranks <- read.csv("data/national_ranking_soccer_1901-2023.csv")
 wc_elo <- read.csv("data/primary_dataset_wc_elo.csv")
@@ -121,7 +126,7 @@ head(wc_2018_prediction)
 We check the model by using the 2018 World Cup stats to predict how far each countries team will by looking at their count matches. We use stats like goals_ratio, win_ratio, elo_rank, and elo_rating using the randomForest model. After using the model and checking the predicted minus actual, we see that our model is not far off from predicting accurate match_counts for the teams. 
 
 ```{r, echo = FALSE, warning=FALSE}
-source("RandomForestFunction.R")
+source("03_01_random_forest_function.R")
 ```
 ### Accuracy Metrics 
   - RMSE - Root mean square error: this being under 1 shows that the model was able to predict within the error margin of 1 which is good in predicting match_counts which are in 3-7 ranges

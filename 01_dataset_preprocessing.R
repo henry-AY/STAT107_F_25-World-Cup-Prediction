@@ -3,6 +3,8 @@
 # It does this by only selecting the necessary columns that we need, and then also using RegEx to properly
 # extract the proper information from each of the columns
 
+source("00_requirements.R")
+
 clean_wc_performance <- function(filepath) {
   df_performance <- readr::read_csv(filepath, show_col_types = FALSE)
   # head(df_performance, 200)

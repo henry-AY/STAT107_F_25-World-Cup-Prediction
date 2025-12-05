@@ -14,6 +14,11 @@ date: "2025-11-07"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, include=FALSE, warning=FALSE, echo=FALSE}
+# Load all necessary files
+source("00_requirements.R")
+```
+
 ## Abstract
 
 > Write Abstract Here
@@ -137,7 +142,7 @@ The linear models unperformed, which is expected because of how World Cup progre
 Predicting for 2022
 
 ```{r, echo = FALSE, warning=FALSE, include = FALSE}
-source("RandomForestFunction.R")
+source("03_01_random_forest_function.R")
 ```
 
 ```{r, warning = FALSE, echo = FALSE}
