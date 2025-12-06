@@ -108,17 +108,16 @@ average:
 # Random Forest
 ## Model Check (2018 World Cup)
 
+```{r, echo = FALSE, warning=FALSE}
+source("03_01_random_forest_function.R")
+```
+
 ```{r, warning=FALSE}
 count_match_prediction(2018)
 ```
 We check the model by using the 2018 World Cup stats to predict how far each countries team will by looking at their count matches. We use stats like goals_ratio, win_ratio, elo_rank, and elo_rating using the randomForest model. After using the model and checking the predicted minus actual, we see that our model is not accurate for some teams, and less accurate when predicting match count for other team.
 
-```{r, echo = FALSE, warning=FALSE}
-source("03_01_random_forest_function.R")
-```
-
 Predicting for 1982
-
 ```{r, warning=FALSE}
 count_match_prediction(1982)
 ```
