@@ -2,6 +2,11 @@
 
 > Authors: Jigar Patel, Henry Yost, Davinia Muthalaly, Refugio Zepeda
 
+## Data
+[JGravier Soccer Elo Dataset](https://github.com/JGravier/soccer-elo/blob/main/csv/ranking_soccer_1901-2023.csv)
+
+[Jfjelstul World Cup Qualified Teams Dataset](https://github.com/jfjelstul/worldcup/blob/master/data-csv/qualified_teams.csv)
+
 ## Files
 ```
       00_requirements.R
