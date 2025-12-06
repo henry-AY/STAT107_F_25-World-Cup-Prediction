@@ -38,21 +38,21 @@ Lastly, this file is the culmination of all of our research and analysis into a 
 
 If you haven’t already, start by forking this repository to your own GitHub account so you can make edits or run the code independently.
 
-Then clone your fork to your local machine:
+Then clone your fork to your local machine by using the HTTPS:
 ```bash
 git clone https://github.com/<your-username>/STAT107-WorldCup-Prediction-Project.git
-cd STAT107-WorldCup-Prediction-Project
 ```
 
 ### 2. Set Up Your R Environment
 Make sure you have R (≥ 4.0) and RStudio installed and launch RStudio.
 
-Then install the required packages by running the following in your R console:
-Additionally, you can run the `FinalReport.Rmd` and it will install the requirements.
+Navigate to the folder in Finder/File Storage, and open the `FinalReport.Rmd` Then install the required packages by running the following in your R console:
 ```bash
 # Install required libraries
 source("00_requirements.R")
 ```
+
+Additionally, you can knit the `FinalReport.Rmd` and it will install the requirements.
 
 ### 3. Run the EDA and model R-Markdown files
 
