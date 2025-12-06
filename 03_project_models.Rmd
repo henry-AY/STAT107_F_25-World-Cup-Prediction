@@ -12,6 +12,11 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, include=FALSE, warning=FALSE, echo=FALSE}
+# Load all necessary files
+source("00_requirements.R")
+```
+
 ```{r, warning=FALSE}
 national_ranks <- read.csv("data/national_ranking_soccer_1901-2023.csv")
 wc_elo <- read.csv("data/primary_dataset_wc_elo.csv")
@@ -104,29 +109,16 @@ average:
 ## Model Check (2018 World Cup)
 
 ```{r, warning=FALSE}
-library(randomForest)
-
-rf_model <- randomForest(count_matches ~ elo_rating + win_ratio + goals_ratio + elo_rank, data = wc_elo)
-
-wc_2018_prediction <- subset(wc_elo, world_cup_year == 2018)
-wc_2018_prediction <- wc_2018_prediction[, c("team_name", "win_ratio", "goals_ratio", "elo_rank", "elo_rating", "count_matches")]
-
-predicted_elo_2018 <- predict(rf_model, newdata = wc_2018_prediction)
-wc_2018_prediction$predicted_count_matches <- round(predicted_elo_2018)
-
-wc_2018_prediction$error <- wc_2018_prediction$predicted_count_matches - wc_2018_prediction$count_matches
-head(wc_2018_prediction)
-
+count_match_prediction(2018)
 ```
-We check the model by using the 2018 World Cup stats to predict how far each countries team will by looking at their count matches. We use stats like goals_ratio, win_ratio, elo_rank, and elo_rating using the randomForest model. After using the model and checking the predicted minus actual, we see that our model is not far off from predicting accurate match_counts for the teams. 
+We check the model by using the 2018 World Cup stats to predict how far each countries team will by looking at their count matches. We use stats like goals_ratio, win_ratio, elo_rank, and elo_rating using the randomForest model. After using the model and checking the predicted minus actual, we see that our model is not accurate for some teams, and less accurate when predicting match count for other team.
 
 ```{r, echo = FALSE, warning=FALSE}
-source("RandomForestFunction.R")
+source("03_01_random_forest_function.R")
 ```
-### Accuracy Metrics 
-  - RMSE - Root mean square error: this being under 1 shows that the model was able to predict within the error margin of 1 which is good in predicting match_counts which are in 3-7 ranges
-  - MAE - Mean absolue error: this being under 1 as well shows the model accuracy was pretty muhc on point being not far away from the actual match_count
-  - MAPE - Mean absolute percentage error: this being under 10% represents a fit model that is able to predict the match_count with small margin of error
+
+Predicting for 1982
+
 ```{r, warning=FALSE}
 count_match_prediction(1982)
 ```

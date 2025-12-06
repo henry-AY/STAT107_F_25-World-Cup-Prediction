@@ -8,8 +8,6 @@ output: pdf_document
 # Cleaning qualified_teams.csv and ranking_soccer_1901-2023.csv datasets
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(readr)
-library(dplyr)
 
 # Install req text
 source("00_requirements.R")
@@ -31,7 +29,7 @@ write_csv(elo_wc, "data/primary_dataset_wc_elo.csv")
 ```
 
 ```{r load-eda}
-source("02_funct_wc_elo_eda.R")
+source("02_01_EDA_graphs.R")
 wc <- load_wc_elo()
 head(wc)
 ```
